@@ -4,10 +4,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from .models import Material, Сategories, ProjectInformation
 from django.http import HttpResponse
-import bcrypt
 import json
-from uuid import uuid4
-import uuid
 import random
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
@@ -51,12 +48,16 @@ def login_view(request):
 class Categories(APIView):
     def post(self, request):
         indexTask = request.data.get("indexTask")
+        print(f'ответил - {len(indexTask)} вопросов')
         category = request.data.get("category")
         materials = Material.objects.filter(
             title=category).exclude(id__in=indexTask)
         output = []
+        print(f'Осталось - {len(materials)} вопросов')
+        replied = len(indexTask)
+        left_to_answer = len(materials)
         unique_indexes = random.sample(
-            range(len(materials)), min(5, len(materials)))
+            range(len(materials)), min(10, len(materials)))
         if materials:
             for index in unique_indexes:
                 material = materials[index]
@@ -65,6 +66,8 @@ class Categories(APIView):
                     "title": material.title,
                     "question": material.question,
                     "answer": material.answer,
+                    'replied': replied,
+                    'left_to_answer': left_to_answer,
                 })
             return Response(output)
 
@@ -83,8 +86,6 @@ def get_categories(request):
 
 def projectInformations(request):
     informations = ProjectInformation.objects.all()
-    data = []
-    for info in informations:
-        data.append({'title': info.title, 'body': info.body})
+    data = [{'title': info.title, 'body': info.body} for info in informations]
+    return JsonResponse(data, safe=False)
 
-    return HttpResponse(json.dumps(data, ensure_ascii=False))
