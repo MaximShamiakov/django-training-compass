@@ -48,6 +48,7 @@ def login_view(request):
 class Categories(APIView):
     def post(self, request):
         indexTask = request.data.get("indexTask")
+        print(request.data.get)
         print(f'ответил - {len(indexTask)} вопросов')
         category = request.data.get("category")
         materials = Material.objects.filter(
