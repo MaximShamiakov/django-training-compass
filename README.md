@@ -20,12 +20,13 @@ This project represents the backend of a learning platform, **Django Training Co
 - SQLite3 (default database)
 - JSON Web Tokens (JWT) for user authentication
 - CSRF (Cross-Site Request Forgery) protection
+- Docker for containerization
 
 ## Quick Start
 
-### Clone the repository
+## Clone the repository
 
-First, clone the repository to your local machine:
+## First, clone the repository to your local machine
 
 ```bash
 git clone https://github.com/MaximShamiakov/django-training-compass.git
@@ -42,3 +43,9 @@ python manage.py migrate
 python manage.py createsuperuser
 
 python manage.py runserver
+
+## Build Docker image
+
+docker build -t django-training-compass .
+
+docker run -p 8000:8000 django-training-compass
